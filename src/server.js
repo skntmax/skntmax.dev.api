@@ -4,6 +4,14 @@ import globalMiddleware from "./global_middlware/middleware";
 import { SuccessStatus } from "./response_utils";
 import { initDb } from "./connection/db_connect";
 
+// __dirname 
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+const __dirname = dirname(fileURLToPath(import.meta.url));
+// __dirname 
+
+
+
 let app = Express()
 
 // console.log("dotenv.DB" ,dotenv.DB_URL)
