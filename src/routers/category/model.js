@@ -4,6 +4,7 @@ function rgmcat_m(body) {
          TITLE:body.title ,
          DISC:body.disc ,
          IMAGE:body.img || "" ,
+         ORIGINAL_FILE_NAME:body.originalFileName 
     }
     
 }

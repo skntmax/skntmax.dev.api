@@ -7,7 +7,7 @@ import { folders } from "../../constans";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
- const getAllCategory= async(body , files)=>{
+ const addCategory= async(body , files)=>{
      try {
        
        // first saving catgory logo 
@@ -28,10 +28,10 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
               if(err)  return Promise.reject(" category logo not saved")
               console.log("logo saved ")
            })
-   
-           
+              
            body.img =`${folders.CATEGORY_FOLDER}/${fileName}` 
-       }
+            body.originalFileName = originalFileName
+         }
       
         
       let rgmc_model = rgmcat_m(body)
@@ -51,4 +51,40 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 }
 
 
-export {getAllCategory}
+
+async function getAllCategory() {
+    try {
+      
+     let catgs =await rg_global_category_model.find({})
+    return Promise.resolve({data:catgs})
+    }catch(err) {
+      return Promise.reject({error:err})
+       
+    }
+   
+}
+
+
+
+
+
+
+
+
+
+
+
+// async function fn() {
+//    try {
+     
+   
+//    return Promise.resolve({data:[]})
+//    }catch(err) {
+//      return Promise.reject({error:err})
+      
+//    }
+  
+// }
+
+
+export {addCategory ,getAllCategory}

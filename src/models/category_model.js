@@ -6,6 +6,7 @@ const rg_global_category_schema = new Schema({
      TITLE:String , 
      DISC:String,
      IMAGE:String,
+     ORIGINAL_FILE_NAME:String,
      CREATED_ON:{
          type:Date, 
          default:()=> new Date()
