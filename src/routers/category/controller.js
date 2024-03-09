@@ -44,7 +44,7 @@ const addCategory = async (body, files) => {
     return Promise.resolve({ data: [] });
   } catch (err) {
     console.log("err", err);
-    return Promise.reject({ error: err });
+    return Promise.reject({ error: err.message });
   }
 };
 
@@ -53,9 +53,10 @@ async function getAllCategory() {
     let catgs = await rg_global_category_model.find({});
     return Promise.resolve({ data: catgs });
   } catch (err) {
-    return Promise.reject({ error: err });
+    return Promise.reject({ error: err.message });
   }
 }
+
 
 // async function fn() {
 //    try {
@@ -67,5 +68,7 @@ async function getAllCategory() {
 //    }
 
 // }
+
+
 
 export { addCategory, getAllCategory };

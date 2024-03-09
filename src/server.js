@@ -26,7 +26,6 @@ globalMiddleware(app);
 
 // folder intiation portion
 let assets = path.join(__dirname, "assets/Logo/categories_logo");
-
 if (!fs.existsSync(assets)) {
   fs.mkdirSync(assets, { recursive: true });
 }
