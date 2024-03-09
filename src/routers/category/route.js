@@ -29,7 +29,4 @@ category_router.get('/get-categories' , (req, res )=>{
 
 
 
-
-
-
 export {category_router} 
