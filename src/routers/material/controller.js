@@ -25,6 +25,7 @@ async function getDataByCatId(cat_id) {
   }
 }
 
+
 // function sample(params) {
 //     try{
 
@@ -32,7 +33,6 @@ async function getDataByCatId(cat_id) {
 //     }catch(err){
 //         return Promise.reject(err)
 //     }
-
 // }
 
 export { addContent, getDataByCatId };

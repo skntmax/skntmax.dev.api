@@ -1,5 +1,5 @@
 function rgmcat_m(body) {
-  //  title ,  disc , img
+  //  title ,  disc , img(FILE_TYPE) , originalFileName(dynamic)
   return {
     TITLE: body.title,
     DISC: body.disc,

@@ -17,6 +17,10 @@ let app = Express();
 
 await initDb();
 
+app.get("/", (req, res) => {
+  res.send(SuccessStatus([], "connection succesfull"));
+});
+
 app.get("/check-health", (req, res) => {
   console.log("health check ok !!");
   res.send(SuccessStatus([], "heath check success"));
@@ -26,7 +30,6 @@ globalMiddleware(app);
 
 // folder intiation portion
 let assets = path.join(__dirname, "assets/Logo/categories_logo");
-
 if (!fs.existsSync(assets)) {
   fs.mkdirSync(assets, { recursive: true });
 }
