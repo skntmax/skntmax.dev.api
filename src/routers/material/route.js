@@ -1,6 +1,6 @@
 import Express from "express";
 import { FailureStatus, SuccessStatus } from "../../response_utils";
-import { addContent, getDataByCatId } from "./controller";
+import { addContent, getContentById, getDataByCatId } from "./controller";
 let content_router = Express.Router();
 
 content_router.post("/add-content", (req, res) => {
@@ -20,6 +20,16 @@ content_router.get("/get-content-cat/:cat_id", (req, res) => {
     })
     .catch((err) => {
       res.send(FailureStatus(err, "couldn't get list "));
+    });
+});
+
+content_router.get("/get-content-by/:id", (req, res) => {
+  getContentById(req.params.id)
+    .then((response) => {
+      res.send(SuccessStatus(response));
+    })
+    .catch((err) => {
+      res.send(FailureStatus(err, "couldn't get item "));
     });
 });
 
