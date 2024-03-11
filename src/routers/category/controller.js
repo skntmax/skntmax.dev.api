@@ -1,4 +1,4 @@
-import { rg_global_category_model } from "../../models/category_model";
+import { rg_global_category_model, rg_global_sub_category_model } from "../../models/category_model";
 import path from "node:path";
 import { rgmcat_m } from "./model";
 import { dirname } from "node:path";
@@ -35,13 +35,24 @@ const addCategory = async (body, files) => {
       body.originalFileName = originalFileName;
     }
 
+     
     let rgmc_model = rgmcat_m(body);
-
+    
     let new_cat = new rg_global_category_model(rgmc_model);
-
     await new_cat.save();
+       
+    if(body.multi) {
+       let prmsub_cat_prms = await Promise.all(body.sub_cat.split('==').map(async (ele)=>{
+        let new_sub_cat = new rg_global_sub_category_model({
+         TITLE:ele,
+         CAT_ID:new_cat._id
+
+        })
+        return await new_sub_cat.save()
+      }))  
+      }
+
     return Promise.resolve({ data: new_cat });
-    return Promise.resolve({ data: [] });
   } catch (err) {
     console.log("err", err);
     return Promise.reject({ error: err.message });
