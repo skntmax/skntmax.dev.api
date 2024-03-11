@@ -9,6 +9,20 @@ const rg_golbal_master_content_detail_schema = new Schema({
     type: ObjectId,
     ref: collection.rg_golbal_master_category,
   },
+
+  FAV_RATING: {
+    type: Array,
+    default: () => [1],
+  },
+  DIFICULTY_RATING: {
+    type: Array,
+    default: () => [1],
+  },
+  SATISFACTORY_RATING: {
+    type: Array,
+    default: () => [1],
+  },
+
   CREATED_ON: {
     type: Date,
     default: () => new Date(),

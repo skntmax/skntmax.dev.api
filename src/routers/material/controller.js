@@ -21,10 +21,23 @@ async function getDataByCatId(cat_id) {
     return Promise.resolve({ data: content_by_cat_id });
   } catch (err) {
     console.log(err);
-    return Promise.reject({ error: err.message });
+    return Promise.reject(err.message);
   }
 }
 
+async function getContentById(id) {
+  try {
+    let res = await rg_golbal_master_content_detail_model.findById(id, {
+      _id: 0,
+      ANSWER: 1,
+      QS: 1,
+      DISC: 1,
+    });
+    return Promise.resolve({ data: res });
+  } catch (err) {
+    return Promise.reject(err.message);
+  }
+}
 
 // function sample(params) {
 //     try{
@@ -35,4 +48,4 @@ async function getDataByCatId(cat_id) {
 //     }
 // }
 
-export { addContent, getDataByCatId };
+export { addContent, getDataByCatId, getContentById };

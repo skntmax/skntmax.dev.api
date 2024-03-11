@@ -57,6 +57,15 @@ async function getAllCategory() {
   }
 }
 
+async function getCatIds() {
+  try {
+    let catgs = await rg_global_category_model.find({}, { _id: 1, TITLE: 1 });
+
+    return Promise.resolve({ data: catgs });
+  } catch (err) {
+    return Promise.reject({ error: err });
+  }
+}
 
 // async function fn() {
 //    try {
@@ -69,6 +78,4 @@ async function getAllCategory() {
 
 // }
 
-
-
-export { addCategory, getAllCategory };
+export { addCategory, getAllCategory, getCatIds };
