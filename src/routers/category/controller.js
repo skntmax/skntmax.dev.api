@@ -4,6 +4,7 @@ import { rgmcat_m } from "./model";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { folders } from "../../constans";
+import collection from "../../collections/collections";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -24,7 +25,7 @@ const addCategory = async (body, files) => {
         __dirname,
         `../../assets/Logo/${folders.CATEGORY_FOLDER}/` + fileName
       );
-      console.log("dst", dst);
+    
 
       tmpFile.mv(dst, (err, data) => {
         if (err) return Promise.reject(" category logo not saved");
@@ -61,7 +62,29 @@ const addCategory = async (body, files) => {
 
 async function getAllCategory() {
   try {
-    let catgs = await rg_global_category_model.find({});
+    
+    
+    let catgs = await rg_global_category_model.aggregate([
+      
+      {
+        $project:{
+           _id:1, TITLE:1 ,IMAGE:1, MULTI:1
+        }
+      },
+       
+      {
+        $lookup:
+        {
+          from:"rg_golbal_master_sub_categories" ,
+          localField:"_id" ,
+          foreignField:"CAT_ID" ,
+          as: "all_cat"
+        },
+      },
+      
+
+    ])
+    
     return Promise.resolve({ data: catgs });
   } catch (err) {
     return Promise.reject({ error: err.message });
