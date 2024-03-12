@@ -9,7 +9,7 @@ async function addContent(body) {
     await new_content.save();
     return Promise.resolve({ data: new_content });
   } catch (err) {
-    return Promise.reject(err.message);
+    return Promise.reject({ error: err.message });
   }
 }
 
@@ -21,7 +21,7 @@ async function getDataByCatId(cat_id) {
     return Promise.resolve({ data: content_by_cat_id });
   } catch (err) {
     console.log(err);
-    return Promise.reject(err.message);
+    return Promise.reject({ error: err.message });
   }
 }
 
@@ -35,7 +35,7 @@ async function getContentById(id) {
     });
     return Promise.resolve({ data: res });
   } catch (err) {
-    return Promise.reject(err.message);
+    return Promise.reject({ error: err.message });
   }
 }
 

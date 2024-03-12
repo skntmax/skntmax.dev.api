@@ -21,10 +21,12 @@ app.get("/", (req, res) => {
   res.send(SuccessStatus([], "connection succesfull"));
 });
 
+
 app.get("/check-health", (req, res) => {
   console.log("health check ok !!");
   res.send(SuccessStatus([], "heath check success"));
 });
+
 
 globalMiddleware(app);
 
