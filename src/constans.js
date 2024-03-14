@@ -4,4 +4,8 @@ const folders = {
 }
 
 
-export {folders}
+const secret_keys = {
+  token_secret:"jkdhjfkhfkjdkljaklsdjlksdjlksd"
+}
+
+export {folders ,secret_keys}
