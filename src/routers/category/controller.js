@@ -139,6 +139,7 @@ async function getCategoryById(cat_id) {
 
 async function updateCategoryById(body, id) {
   try {
+    // console.log(body);
     let updateCatById = await rg_global_category_model.findByIdAndUpdate(
       id,
       {
@@ -152,18 +153,33 @@ async function updateCategoryById(body, id) {
 
     if (body.multi) {
       let sub_cat_ids_arr = body.sub_cat.map((ele) => ele.split("==")[0]);
+
       let sub_cat_ids_payload = body.sub_cat.map((ele) => {
         return { TITLE: ele.split("==")[1] };
       });
 
       for (let i = 0; i < sub_cat_ids_arr.length; i++) {
-        var update_sub_cat =
-          await rg_global_sub_category_model.findOneAndUpdate(
-            { _id: new ObjectId(sub_cat_ids_arr[i]) },
+        // updating first
+        var update_sub_cat = await rg_global_sub_category_model
+          .updateOne(
+            sub_cat_ids_arr[i] != "undefined"
+              ? { _id: new ObjectId(sub_cat_ids_arr[i]) }
+              : {},
             { $set: sub_cat_ids_payload[i] },
-            { new: true }
-          );
+            { upsert: true, new: true, setDefaultsOnInsert: true }
+          )
+          .exec();
+
+        if (sub_cat_ids_arr[i] == "undefined") {
+          let new_sub_cat = new rg_global_sub_category_model({
+            ...sub_cat_ids_payload[i],
+            CAT_ID: new ObjectId(id),
+          });
+          new_sub_cat.save();
+        }
       }
+
+      // adding a new one if any occures
     }
 
     if (body.deleted_sub_cat.length > 0) {
