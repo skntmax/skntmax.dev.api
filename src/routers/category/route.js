@@ -1,5 +1,11 @@
 import Express from "express";
-import { addCategory, getAllCategory, getCatIds } from "./controller";
+import {
+  addCategory,
+  getAllCategory,
+  getCatIds,
+  getCategoryById,
+  updateCategoryById,
+} from "./controller";
 import { FailureStatus, SuccessStatus } from "../../response_utils";
 let category_router = Express.Router();
 
@@ -25,6 +31,26 @@ category_router.get("/get-categories", (req, res) => {
 
 category_router.get("/get-categories-id", (req, res) => {
   getCatIds()
+    .then((response) => {
+      res.send(SuccessStatus(response));
+    })
+    .catch((err) => {
+      res.send(FailureStatus(err, "couldn't get categories"));
+    });
+});
+
+category_router.get("/get-categories-by-id/:id", (req, res) => {
+  getCategoryById(req.params.id)
+    .then((response) => {
+      res.send(SuccessStatus(response));
+    })
+    .catch((err) => {
+      res.send(FailureStatus(err, "couldn't get categories"));
+    });
+});
+
+category_router.post("/update-categories-by-id/:id", (req, res) => {
+  updateCategoryById(req.body, req.params.id)
     .then((response) => {
       res.send(SuccessStatus(response));
     })

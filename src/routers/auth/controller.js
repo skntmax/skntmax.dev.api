@@ -1,0 +1,104 @@
+import { user_model } from "../../models/user_model"
+import jwt from 'jsonwebtoken'
+import bcrypt from 'bcrypt'
+import { secret_keys } from "../../constans"
+import {getUserObj} from './auth_utils'
+
+export async function addUser(body) {
+   try {
+
+    const { username , email , password}  = body
+
+     let user_exist =await user_model.findOne({EMAIL:email})
+     if(user_exist!=null) {
+      // already exist 
+      return Promise.reject({error:"user already exist"})  
+     }
+     
+     let hashPass = await bcrypt.hash(password ,  5 )
+     let new_user_model  =new user_model( {
+        USERNAME:username,
+        EMAIL:email,
+        PASSWORD:hashPass
+     })
+
+     await new_user_model.save()
+
+     let token = jwt.sign({_id:new_user_model._id} , secret_keys.token_secret )
+   return Promise.resolve({data:{
+      ...getUserObj(new_user_model._doc ,['PASSWORD' ,"_id"] ) ,
+     token
+   }})
+   }catch(err) {
+     console.log("err", err)
+     return Promise.reject({error:err.message})
+
+   }
+
+}
+
+
+
+
+
+export async function LoginUser(body) {
+   try {
+ 
+    const { username , password }  = body
+    let email_or_username = {}
+    if(username.includes("@")) {
+      // email 
+       email_or_username={EMAIL:username}
+     }else{
+       email_or_username={USERNAME:username}
+     }
+
+     let user_exist =await user_model.findOne(email_or_username)
+    if(user_exist==null) {
+      return Promise.reject({error:"Please Signup first "})  
+    }
+
+    let isPasswordTrue =await bcrypt.compare(password ,user_exist.PASSWORD )
+    if(isPasswordTrue) {
+        let token = jwt.sign({_id:user_exist._id} , secret_keys.token_secret )
+        return Promise.resolve({data:{
+            ...getUserObj(user_exist._doc ,['PASSWORD' ,"_id"] ) ,
+           token
+         }})
+     }else{
+        return Promise.reject({error:"Wrong credentials "})  
+     }
+
+
+   }catch(err) {
+    console.log("err", err)
+     return Promise.reject({error:err.message})
+   }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+// async function fn() {
+//    try {
+
+//    return Promise.resolve({data:[]})
+//    }catch(err) {
+//     console.log("err", err)
+    //  return Promise.reject({error:err.message})
+
+
+//    }
+
+// }
+

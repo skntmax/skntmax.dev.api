@@ -2,12 +2,15 @@ import {
   rg_global_category_model,
   rg_global_sub_category_model,
 } from "../../models/category_model";
+import mongoose from "mongoose";
 import path from "node:path";
 import { rgmcat_m } from "./model";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { folders } from "../../constans";
 import collection from "../../collections/collections";
+
+const ObjectId = mongoose.Types.ObjectId;
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -100,15 +103,97 @@ async function getCatIds() {
   }
 }
 
+async function getCategoryById(cat_id) {
+  try {
+    let catgs = await rg_global_category_model.aggregate([
+      {
+        $match: {
+          _id: new ObjectId(cat_id),
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          TITLE: 1,
+          IMAGE: 1,
+          MULTI: 1,
+          DISC: 1,
+        },
+      },
+
+      {
+        $lookup: {
+          from: "rg_golbal_master_sub_categories",
+          localField: "_id",
+          foreignField: "CAT_ID",
+          as: "ALL_CAT",
+        },
+      },
+    ]);
+
+    return Promise.resolve({ data: catgs[0] });
+  } catch (err) {
+    return Promise.reject({ error: err.message });
+  }
+}
+
+async function updateCategoryById(body, id) {
+  try {
+    let updateCatById = await rg_global_category_model.findByIdAndUpdate(
+      id,
+      {
+        TITLE: body.title,
+        DISC: body.disc,
+      },
+      {
+        new: true,
+      }
+    );
+
+    if (body.multi) {
+      let sub_cat_ids_arr = body.sub_cat.map((ele) => ele.split("==")[0]);
+      let sub_cat_ids_payload = body.sub_cat.map((ele) => {
+        return { TITLE: ele.split("==")[1] };
+      });
+
+      for (let i = 0; i < sub_cat_ids_arr.length; i++) {
+        var update_sub_cat =
+          await rg_global_sub_category_model.findOneAndUpdate(
+            { _id: new ObjectId(sub_cat_ids_arr[i]) },
+            { $set: sub_cat_ids_payload[i] },
+            { new: true }
+          );
+      }
+    }
+
+    if (body.deleted_sub_cat.length > 0) {
+      let remove_many = await rg_global_sub_category_model.deleteMany({
+        _id: { $in: body.deleted_sub_cat },
+      });
+    }
+
+    return Promise.resolve({ data: update_sub_cat });
+  } catch (err) {
+    console.log(err.message);
+    return Promise.reject({ error: err.message });
+  }
+}
+
 // async function fn() {
 //    try {
 
 //    return Promise.resolve({data:[]})
 //    }catch(err) {
-//      return Promise.reject({error:err})
+//      return Promise.reject({error:err.message})
 
 //    }
 
 // }
 
-export { addCategory, getAllCategory, getCatIds };
+export {
+  addCategory,
+  getAllCategory,
+  getCatIds,
+  getCategoryById,
+  updateCategoryById,
+};
