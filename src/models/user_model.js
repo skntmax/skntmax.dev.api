@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import collection from "../collections/collections";
+import { user_types } from "../utils";
 
 const rg_global_users_schema = new Schema({
      USERNAME:String , 
@@ -7,6 +8,10 @@ const rg_global_users_schema = new Schema({
       type:String,   
     },
     PASSWORD:String , 
+    USER_TYPE:{
+      type:String,
+      default:()=> user_types.normal     
+    },
     CREATED_ON:{
         type:Date, 
         default:()=> new Date()
