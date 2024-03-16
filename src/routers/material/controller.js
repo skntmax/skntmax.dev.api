@@ -39,13 +39,44 @@ async function getContentById(id) {
   }
 }
 
+async function setContent(payload) {
+  try {
+    const { title, multi, disc, cat_id, sub_cat_id, answer } = payload;
+    if (multi) {
+      let content_save = new rg_golbal_master_content_detail_model({
+        QS: title,
+        DISC: disc,
+        CAT_ID: cat_id,
+        SUB_CAT_ID: sub_cat_id,
+        ANSWER: answer,
+      });
+      await content_save.save();
+      return Promise.resolve({ data: content_save });
+    } else {
+      let content_save = new rg_golbal_master_content_detail_model({
+        QS: title,
+        DISC: disc,
+        CAT_ID: cat_id,
+        ANSWER: answer,
+      });
+
+      await content_save.save();
+      return Promise.resolve({ data: content_save });
+    }
+  } catch (err) {
+    console.log(err.messaga);
+    return Promise.reject(err.message);
+  }
+}
+
 // function sample(params) {
 //     try{
 
 //         return Promise.resolve({data:[]})
 //     }catch(err){
-//         return Promise.reject(err)
+//  console.log(err.messaga)
+//         return Promise.reject(err.message)
 //     }
 // }
 
-export { addContent, getDataByCatId, getContentById };
+export { addContent, getDataByCatId, getContentById, setContent };

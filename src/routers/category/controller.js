@@ -139,7 +139,7 @@ async function getCategoryById(cat_id) {
 
 async function updateCategoryById(body, id) {
   try {
-    // console.log(body);
+    console.log(body);
     let updateCatById = await rg_global_category_model.findByIdAndUpdate(
       id,
       {

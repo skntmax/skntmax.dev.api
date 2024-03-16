@@ -10,6 +10,11 @@ const rg_golbal_master_content_detail_schema = new Schema({
     ref: collection.rg_golbal_master_category,
   },
 
+  SUB_CAT_ID: {
+    type: ObjectId,
+    ref: collection.rg_golbal_master_sub_category,
+  },
+
   FAV_RATING: {
     type: Array,
     default: () => [1],
