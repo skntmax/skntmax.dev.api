@@ -3,13 +3,16 @@ import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 import { secret_keys } from "../../constans"
 import {getUserObj} from './auth_utils'
+import { generateUsernames } from "../../utils"
 
 export async function addUser(body) {
    try {
 
     const { username , email , password}  = body
 
-     let user_exist =await user_model.findOne({EMAIL:email})
+     let user_exist =await user_model.findOne({ $or: [ {EMAIL:email },  {USERNAME:username } ] 
+    
+     })
      if(user_exist!=null) {
       // already exist 
       return Promise.reject({error:"user already exist"})  
@@ -68,8 +71,6 @@ export async function LoginUser(body) {
      }else{
         return Promise.reject({error:"Wrong credentials "})  
      }
-
-
    }catch(err) {
     console.log("err", err)
      return Promise.reject({error:err.message})
@@ -81,6 +82,28 @@ export async function LoginUser(body) {
 
 
 
+
+
+
+
+
+export async function getUserName(username) {
+  
+   try {
+     let usernames = generateUsernames(username )
+
+     let all_users = await (await user_model.find({}, {_id:0 , USERNAME:1})).map(ele=> ele.USERNAME)
+    
+     let filteredUsers = usernames.filter(ele=> all_users.some(item=> item!=ele)  )
+     return Promise.resolve({data:filteredUsers})
+   }catch(err) {
+    console.log("err", err)
+     return Promise.reject({error:err.message})
+
+
+   }
+
+}
 
 
 

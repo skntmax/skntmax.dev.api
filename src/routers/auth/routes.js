@@ -1,6 +1,6 @@
 import Express from "express";
 import { FailureStatus, SuccessStatus } from "../../response_utils";
-import { LoginUser, addUser } from "./controller";
+import { LoginUser, addUser, getUserName } from "./controller";
 let auth_router = Express.Router();
 
 auth_router.post("/add-user", (req, res) => {
@@ -24,6 +24,18 @@ auth_router.post("/login-user", (req, res) => {
     })
      
 });
+
+
+auth_router.post("/check-user-names", (req, res) => {
+    
+    getUserName(req.body.username).then(response=>{
+        res.send(SuccessStatus(response));
+    }).catch(err=>{
+        res.send(FailureStatus(err, "some error while creating a new user "));
+    })
+     
+});
+
 
 
 
