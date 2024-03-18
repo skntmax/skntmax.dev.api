@@ -18,8 +18,8 @@ content_router.post("/add-content", (req, res) => {
     });
 });
 
-content_router.get("/get-content-cat/:cat_id/:pn", (req, res) => {
-  getDataByCatId(req.params.cat_id,req.params.pn)
+content_router.get("/get-content-cat/:cat_id/:isMulti/:pn", (req, res) => {
+  getDataByCatId(req.params.cat_id,req.params.isMulti , req.params.pn)
     .then((response) => {
       res.send(SuccessStatus(response));
     })

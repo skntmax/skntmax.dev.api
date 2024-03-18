@@ -1,3 +1,4 @@
+import { rg_global_category_model, rg_global_sub_category_model } from "../../models/category_model";
 import { rg_golbal_master_content_detail_model } from "../../models/material_model";
 import { rgcontent_m } from "./model";
 import mongoose from "mongoose";
@@ -13,22 +14,38 @@ async function addContent(body) {
   }
 }
 
-async function getDataByCatId(cat_id , pn ) {
+async function getDataByCatId(cat_id ,isMulti, pn ) {
   try {
     let skip = (pn-1)*10 
     let total = pn*10 
     
-    let content_by_cat_id = await rg_golbal_master_content_detail_model.find({
-      CAT_ID: new ObjectId(cat_id),
-    }).skip(skip).limit(total)
+     // first check category  is present or not     
+     if(isMulti=="false") {
+       // single category present , no subtopic 
+      let content_by_cat_id = await rg_golbal_master_content_detail_model.find({
+        CAT_ID: new ObjectId(cat_id),
+      }).skip(skip).limit(total)
+  
+      let count = await rg_golbal_master_content_detail_model.find({
+        CAT_ID: new ObjectId(cat_id),
+      }).countDocuments()
+      return Promise.resolve({ data: content_by_cat_id , count } );     
+     }else{
+      // category present  
+      let sub_cat_id = cat_id
+      let content_by_subcat_id = await rg_golbal_master_content_detail_model.find({
+        SUB_CAT_ID: new ObjectId(sub_cat_id),
+      }).skip(skip).limit(total)
+  
+      let count = await rg_golbal_master_content_detail_model.find({
+        SUB_CAT_ID: new ObjectId(sub_cat_id) ,
+      }).countDocuments()
 
-     
-    let count = await rg_golbal_master_content_detail_model.find({
-      CAT_ID: new ObjectId(cat_id),
-    }).countDocuments()
+      return Promise.resolve({ data: content_by_subcat_id , count } );     
 
-
-    return Promise.resolve({ data: content_by_cat_id , count } );
+       
+     }
+    
   } catch (err) {
     console.log(err);
     return Promise.reject({ error: err.message });
