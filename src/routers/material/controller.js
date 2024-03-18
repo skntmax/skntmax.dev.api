@@ -13,12 +13,22 @@ async function addContent(body) {
   }
 }
 
-async function getDataByCatId(cat_id) {
+async function getDataByCatId(cat_id , pn ) {
   try {
+    let skip = (pn-1)*10 
+    let total = pn*10 
+    
     let content_by_cat_id = await rg_golbal_master_content_detail_model.find({
       CAT_ID: new ObjectId(cat_id),
-    });
-    return Promise.resolve({ data: content_by_cat_id });
+    }).skip(skip).limit(total)
+
+     
+    let count = await rg_golbal_master_content_detail_model.find({
+      CAT_ID: new ObjectId(cat_id),
+    }).countDocuments()
+
+
+    return Promise.resolve({ data: content_by_cat_id , count } );
   } catch (err) {
     console.log(err);
     return Promise.reject({ error: err.message });

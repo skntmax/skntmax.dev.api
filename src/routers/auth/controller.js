@@ -7,9 +7,7 @@ import { generateUsernames } from "../../utils"
 
 export async function addUser(body) {
    try {
-
     const { username , email , password}  = body
-
      let user_exist =await user_model.findOne({ $or: [ {EMAIL:email },  {USERNAME:username } ] 
     
      })
