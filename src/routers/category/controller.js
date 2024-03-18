@@ -77,6 +77,12 @@ async function getAllCategory() {
         },
       },
 
+       { $sort :{
+        MULTI:1
+       }
+          
+       },
+
       {
         $lookup: {
           from: "rg_golbal_master_sub_categories",
