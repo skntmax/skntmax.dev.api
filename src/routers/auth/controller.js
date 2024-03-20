@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt'
 import { secret_keys } from "../../constans"
 import {getUserObj} from './auth_utils'
 import { generateUsernames } from "../../utils"
+import dotenv from "../../dotenv"
 
 export async function addUser(body) {
    try {
@@ -103,6 +104,32 @@ export async function getUserName(username) {
 
 }
 
+
+
+
+
+
+export async function getGoogleAuthenticatedUser(token) {
+  
+  try {
+    let user =jwt.decode(token , dotenv.GOOGLE_CLIENT_ID ) 
+
+    let objPrototype = {
+      "USERNAME": user.name ,
+      "EMAIL": user.email,
+      "USER_TYPE": "normal" ,
+      "token": token
+    }
+     
+    return Promise.resolve({data:objPrototype  })
+  }catch(err) {
+   console.log("err", err)
+    return Promise.reject({error:err.message})
+
+
+  }
+
+}
 
 
 
