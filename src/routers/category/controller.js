@@ -7,8 +7,9 @@ import path from "node:path";
 import { rgmcat_m } from "./model";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { folders } from "../../constans";
+import constans, { folders, redis_keys } from "../../constans";
 import collection from "../../collections/collections";
+import { redis_client } from "../Redis/RedisConn";
 
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -67,33 +68,41 @@ const addCategory = async (body, files) => {
 
 async function getAllCategory() {
   try {
-    let catgs = await rg_global_category_model.aggregate([
-      {
-        $project: {
-          _id: 1,
-          TITLE: 1,
-          IMAGE: 1,
-          MULTI: 1,
+    let all_cat = await redis_client.get(redis_keys.all_categories);
+    if (all_cat != null) {
+      return Promise.resolve({ data: JSON.parse(all_cat) });
+    } else {
+      let catgs = await rg_global_category_model.aggregate([
+        {
+          $project: {
+            _id: 1,
+            TITLE: 1,
+            IMAGE: 1,
+            MULTI: 1,
+          },
         },
-      },
 
-       { $sort :{
-        MULTI:1
-       }
-          
-       },
-
-      {
-        $lookup: {
-          from: "rg_golbal_master_sub_categories",
-          localField: "_id",
-          foreignField: "CAT_ID",
-          as: "all_cat",
+        {
+          $sort: {
+            MULTI: 1,
+          },
         },
-      },
-    ]);
 
-    return Promise.resolve({ data: catgs });
+        {
+          $lookup: {
+            from: "rg_golbal_master_sub_categories",
+            localField: "_id",
+            foreignField: "CAT_ID",
+            as: "all_cat",
+          },
+        },
+      ]);
+
+      await redis_client.set(redis_keys.all_categories, JSON.stringify(catgs));
+      await redis_client.expire(redis_keys.all_categories, constans.cache_time);
+
+      return Promise.resolve({ data: catgs });
+    }
   } catch (err) {
     return Promise.reject({ error: err.message });
   }

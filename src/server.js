@@ -8,6 +8,7 @@ import fs from "fs";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import path from "path";
+import { initRedis } from "./routers/Redis/RedisConn";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 // __dirname
 
@@ -16,17 +17,16 @@ let app = Express();
 // console.log("dotenv.DB" ,dotenv.DB_URL)
 
 await initDb();
+await initRedis();
 
 app.get("/", (req, res) => {
   res.send(SuccessStatus([], "connection succesfull"));
 });
 
-
 app.get("/check-health", (req, res) => {
   console.log("health check ok !!");
   res.send(SuccessStatus([], "heath check success"));
 });
-
 
 globalMiddleware(app);
 
