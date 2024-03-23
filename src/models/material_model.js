@@ -27,11 +27,16 @@ const rg_golbal_master_content_detail_schema = new Schema({
     type: Array,
     default: () => [1],
   },
+  ADDED_BY: {
+    type: String,
+    default: () => "admin",
+  },
 
   CREATED_ON: {
     type: Date,
     default: () => new Date(),
   },
+
   MODIFIED_ON: {
     type: Date,
     default: () => new Date(),

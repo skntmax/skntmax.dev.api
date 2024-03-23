@@ -2,7 +2,9 @@ import Express from "express";
 import { FailureStatus, SuccessStatus } from "../../response_utils";
 import {
   addContent,
+  forSitemByItemId,
   getContentById,
+  getContentId,
   getDataByCatId,
   setContent,
 } from "./controller";
@@ -18,6 +20,8 @@ content_router.post("/add-content", (req, res) => {
     });
 });
 
+
+
 content_router.get("/get-content-cat/:cat_id/:isMulti/:pn", (req, res) => {
   getDataByCatId(req.params.cat_id,req.params.isMulti , req.params.pn)
     .then((response) => {
@@ -27,6 +31,18 @@ content_router.get("/get-content-cat/:cat_id/:isMulti/:pn", (req, res) => {
       res.send(FailureStatus(err, "couldn't get list "));
     });
 });
+
+
+content_router.get("/get-content-cat-for-sitemap/:item_id", (req, res) => {
+  forSitemByItemId(req.params.item_id)
+    .then((response) => {
+      res.send(SuccessStatus(response));
+    })
+    .catch((err) => {
+      res.send(FailureStatus(err, "couldn't get list "));
+    });
+});
+
 
 content_router.get("/get-content-by/:id", (req, res) => {
   getContentById(req.params.id)
@@ -40,6 +56,17 @@ content_router.get("/get-content-by/:id", (req, res) => {
 
 content_router.post("/store-content", (req, res) => {
   setContent(req.body)
+    .then((response) => {
+      res.send(SuccessStatus(response));
+    })
+    .catch((err) => {
+      res.send(FailureStatus(err, "couldn't get item "));
+    });
+});
+
+
+content_router.get("/get-all-content-id", (req, res) => {
+  getContentId()
     .then((response) => {
       res.send(SuccessStatus(response));
     })
