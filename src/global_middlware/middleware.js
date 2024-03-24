@@ -12,6 +12,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 function globalMiddleware(app) {
   app.use(express.static(path.join(__dirname, "../assets/Logo/")));
+  app.use('/attachments', express.static(path.join(__dirname, "../assets/attachment_folder")));
   app.use(fileupload());
   app.use(express.json());
   app.use(bodyParser.urlencoded({ extended: false }))

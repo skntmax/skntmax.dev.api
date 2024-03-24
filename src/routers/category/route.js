@@ -4,6 +4,7 @@ import {
   getAllCategory,
   getCatIds,
   getCategoryById,
+  postImagUrl,
   updateCategoryById,
 } from "./controller";
 import { FailureStatus, SuccessStatus } from "../../response_utils";
@@ -18,6 +19,18 @@ category_router.post("/add-category", (req, res) => {
       res.send(FailureStatus(err, "couldn't get categories"));
     });
 });
+
+
+category_router.post("/post-image-url", (req, res) => {
+  postImagUrl( req.files)
+    .then((response) => {
+      res.send(SuccessStatus(response));
+    })
+    .catch((err) => {
+      res.send(FailureStatus(err, "couldn't get categories"));
+    });
+});
+
 
 category_router.get("/get-categories", (req, res) => {
   getAllCategory()

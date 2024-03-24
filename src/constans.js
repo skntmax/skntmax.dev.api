@@ -3,6 +3,8 @@ export default {
 };
 const folders = {
   CATEGORY_FOLDER: "categories_logo",
+  ATTACHMENT_FOLDER: "attachment_folder",
+
 };
 
 const secret_keys = {

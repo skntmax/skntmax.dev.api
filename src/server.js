@@ -9,6 +9,7 @@ import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import path from "path";
 import { initRedis } from "./routers/Redis/RedisConn";
+import { folders } from "./constans";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 // __dirname
 
@@ -32,8 +33,13 @@ globalMiddleware(app);
 
 // folder intiation portion
 let assets = path.join(__dirname, "assets/Logo/categories_logo");
+let attachment_folder = path.join(__dirname, "assets/"+folders.ATTACHMENT_FOLDER);
 if (!fs.existsSync(assets)) {
   fs.mkdirSync(assets, { recursive: true });
+}
+
+if (!fs.existsSync(attachment_folder)) {
+  fs.mkdirSync(attachment_folder, { recursive: true });
 }
 
 // folder intiation portion

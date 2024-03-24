@@ -66,6 +66,48 @@ const addCategory = async (body, files) => {
   }
 };
 
+
+
+
+export async function postImagUrl(files) {
+  try {
+
+    if (!files) {
+      return Promise.reject("Please provide Image first");
+    }
+
+    if (files) {
+      let tmpFile = files.attachment;
+      const { name: originalFileName } = tmpFile;
+      let ext = originalFileName.split(".")[1];
+      let fileName = Date.now() + "." + ext;
+      let dst = path.join(
+        __dirname,
+        `../../assets/${folders.ATTACHMENT_FOLDER}/` + fileName
+      );
+
+      tmpFile.mv(dst, (err, data) => {
+        if (err) return Promise.reject(" attachment not saved");
+        console.log("attachment not saved ");
+      });
+
+      let filepath = `${folders.ATTACHMENT_FOLDER}/${fileName}`;
+    
+      return Promise.resolve({data:filepath})
+       
+    }
+
+
+  }catch(err) {
+    return Promise.reject({error:err.message})
+
+  }
+
+}
+
+
+
+
 async function getAllCategory() {
   try {
     let all_cat = await redis_client.get(redis_keys.all_categories);
