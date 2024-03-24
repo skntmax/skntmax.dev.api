@@ -21,6 +21,28 @@ async function addContent(body) {
   }
 }
 
+
+
+export async function  forSitemByItemId(itemId) {
+    try{
+      let new_content
+        let cat_exist = rg_global_category_model.find({_id:itemId})
+        if(cat_exist!=null) {
+          new_content =await  rg_golbal_master_content_detail_model.find({CAT_ID:new ObjectId(itemId)} , { _id:1 , QS:1 ,DISC:1 , CAT_ID:1 , SUB_CAT_ID:1 ,  CREATED_ON:1});
+          return Promise.resolve({data:new_content})
+        }else{
+          new_content =await  rg_golbal_master_content_detail_model.find({SUB_CAT_ID:new ObjectId(itemId)} , { _id:1 , QS:1 ,ANSWER:1 ,DISC:1,CAT_ID:1 , SUB_CAT_ID:1 ,CREATED_ON:1});
+          return Promise.resolve({data:new_content})
+        }
+
+    }catch(err){
+ console.log(err.messaga)
+        return Promise.reject(err.message)
+    }
+}
+
+
+
 async function getDataByCatId(cat_id, isMulti, pn) {
   try {
     let skip = (pn - 1) * 10;
@@ -145,6 +167,31 @@ async function setContent(payload) {
     console.log(err.messaga);
     return Promise.reject(err.message);
   }
+}
+
+
+
+
+export async function getContentId() {
+    try{
+
+      
+         let id_exist =await redis_client.get(redis_keys.all_content_id)
+         if(id_exist!=null) {
+          return Promise.resolve({data:JSON.parse(id_exist)})
+         }
+
+         let content_ids = await rg_golbal_master_content_detail_model.find({} , {_id:1 ,CAT_ID:1, SUB_CAT_ID:1} )
+          
+         await redis_client.set(redis_keys.all_content_id , JSON.stringify(content_ids) )
+         await redis_client.expire(redis_keys.all_content_id, constans.cache_time )
+
+        return Promise.resolve({data:content_ids})
+         
+    }catch(err){
+ console.log(err.messaga)
+        return Promise.reject(err.message)
+    }
 }
 
 // function sample(params) {
