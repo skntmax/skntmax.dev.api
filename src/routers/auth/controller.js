@@ -117,10 +117,19 @@ export async function getGoogleAuthenticatedUser(token) {
       });
 
       await new_user_model.save();
-      console.log("user from google saved");
+      let new_user_token =  jwt.sign({_id: new_user_model._id },secret_keys.token_secret  )
+      objPrototype.token =new_user_token
+      return Promise.resolve({ data: objPrototype });
+
     }
 
+
+     // if user already registered , then creating a new token 
+    let new_token =  jwt.sign({_id: exist._id },secret_keys.token_secret)
+    
+    objPrototype.token =new_token
     return Promise.resolve({ data: objPrototype });
+
   } catch (err) {
     console.log("err", err);
     return Promise.reject({ error: err.message });

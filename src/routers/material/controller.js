@@ -23,6 +23,21 @@ async function addContent(body) {
 
 
 
+export async function addContentByUser(body) {
+  try {
+    
+    // let content_mode = rgcontent_m(body);
+    // let new_content = new rg_golbal_master_content_detail_model(content_mode);
+    // await new_content.save();
+    console.log(body)
+    return Promise.resolve({ data: true });
+  } catch (err) {
+    return Promise.reject({ error: err.message });
+  }
+}
+
+
+
 export async function  forSitemByItemId(itemId) {
     try{
       let new_content
@@ -36,7 +51,7 @@ export async function  forSitemByItemId(itemId) {
         }
 
     }catch(err){
- console.log(err.messaga)
+        console.log(err.messaga)
         return Promise.reject(err.message)
     }
 }

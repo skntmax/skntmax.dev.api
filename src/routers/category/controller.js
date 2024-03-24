@@ -92,9 +92,7 @@ export async function postImagUrl(files) {
       });
 
       let filepath = `${folders.ATTACHMENT_FOLDER}/${fileName}`;
-    
       return Promise.resolve({data:filepath})
-       
     }
 
 

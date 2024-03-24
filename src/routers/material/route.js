@@ -2,12 +2,14 @@ import Express from "express";
 import { FailureStatus, SuccessStatus } from "../../response_utils";
 import {
   addContent,
+  addContentByUser,
   forSitemByItemId,
   getContentById,
   getContentId,
   getDataByCatId,
   setContent,
 } from "./controller";
+import { varifyToken } from "../../global_middlware/auth_middlware";
 let content_router = Express.Router();
 
 content_router.post("/add-content", (req, res) => {
@@ -19,6 +21,22 @@ content_router.post("/add-content", (req, res) => {
       res.send(FailureStatus(err, "couldn't get content"));
     });
 });
+
+
+
+content_router.post("/add-content-by-user",varifyToken, (req, res) => {
+  req.body.userId = req.userId
+  addContentByUser(req.body)
+    .then((response) => {
+      res.send(SuccessStatus(response));
+    })
+    .catch((err) => {
+      res.send(FailureStatus(err, "couldn't get content"));
+    });
+});
+
+
+
 
 
 
