@@ -28,8 +28,9 @@ const rg_golbal_master_content_detail_schema = new Schema({
     default: () => [1],
   },
   ADDED_BY: {
-    type: String,
-    default: () => "admin",
+    type: ObjectId,
+    ref: collection.rg_golbal_master_user,
+    default: () => "admin" ,
   },
 
   CREATED_ON: {

@@ -8,6 +8,7 @@ import {
   getContentId,
   getDataByCatId,
   setContent,
+  setContentByUser,
 } from "./controller";
 import { varifyToken } from "../../global_middlware/auth_middlware";
 let content_router = Express.Router();
@@ -81,6 +82,20 @@ content_router.post("/store-content", (req, res) => {
       res.send(FailureStatus(err, "couldn't get item "));
     });
 });
+
+
+
+content_router.post("/store-content-by-user",varifyToken, (req, res) => {
+  req.body.userId = req.userId
+  setContentByUser(req.body)
+    .then((response) => {
+      res.send(SuccessStatus(response));
+    })
+    .catch((err) => {
+      res.send(FailureStatus(err, "couldn't get item "));
+    });
+});
+
 
 
 content_router.get("/get-all-content-id", (req, res) => {

@@ -8,7 +8,6 @@ export async function varifyToken(req, res, next) {
     if(!token) return 'Unauthorize user'
     const bearer_token = token.split(' ')[1]  
     let decoded =await  Jwt.verify(bearer_token, secret_keys.token_secret )
-    console.log("decoded" ,decoded)
     req.userId =decoded._id
     return next()
       }catch(err){
